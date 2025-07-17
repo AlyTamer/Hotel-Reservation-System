@@ -19,13 +19,13 @@ public RoomService(RoomRepo roomRepo) {
 }
 public List<RoomDTO> getRooms(String type) {
     List<Room> rooms;
-    if(type!=null&&type.length()>0) {
+    if(type!=null&&!type.isEmpty()) {
         rooms=roomRepo.findAllByRoomType(type);
     }
     else {
         rooms=roomRepo.findAll(Status.AVAILABLE);
     }
-    List<RoomDTO> roomDTOS = new ArrayList<RoomDTO>();
+    List<RoomDTO> roomDTOS = new ArrayList<>();
     for(Room room:rooms) {
         RoomDTO dto = new RoomDTO(
                 room.getId(),

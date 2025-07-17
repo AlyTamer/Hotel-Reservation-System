@@ -1,6 +1,5 @@
 package com.aly.brightskies.task3.dto;
 
-import com.aly.brightskies.task3.entities.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
