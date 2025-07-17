@@ -25,6 +25,7 @@ public class ReservationService {
         this.userRepo = userRepo;
         this.roomRepo = roomRepo;
     }
+    @SuppressWarnings("All")
     public ReservationDTO createReservation(ReservationDTO res) {
         User user = userRepo.findById(res.getUserId()).orElseThrow();
         Room room  = roomRepo.findById(res.getRoomId()).orElseThrow();

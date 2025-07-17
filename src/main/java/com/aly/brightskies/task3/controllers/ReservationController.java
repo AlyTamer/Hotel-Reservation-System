@@ -1,11 +1,6 @@
 package com.aly.brightskies.task3.controllers;
 
 import com.aly.brightskies.task3.dto.ReservationDTO;
-import com.aly.brightskies.task3.entities.Reservation;
-import com.aly.brightskies.task3.entities.User;
-import com.aly.brightskies.task3.repositories.ReservationRepo;
-import com.aly.brightskies.task3.repositories.RoomRepo;
-import com.aly.brightskies.task3.repositories.UserRepo;
 import com.aly.brightskies.task3.services.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
