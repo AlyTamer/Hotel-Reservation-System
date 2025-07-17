@@ -1,8 +1,6 @@
 package com.aly.brightskies.task3.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinTable;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
@@ -16,9 +14,14 @@ import java.util.Date;
 public class Reservation {
     @Id
     private int id;
-    @JoinTable(name = "User")
+    @ManyToOne
+    @JoinColumn(name ="userId")
     private User userId;
-    private String roomId;
+    @ManyToOne
+    @JoinColumn(name ="roomId")
+    private Room roomId;
     private Date checkInDate;
     private Date checkOutDate;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 }

@@ -1,7 +1,6 @@
 package com.aly.brightskies.task3.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,5 +17,7 @@ public class Room {
     private int id;
     private int roomNumber;
     private String roomType;
-    private String status;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 10)
+    private Status status;
 }
