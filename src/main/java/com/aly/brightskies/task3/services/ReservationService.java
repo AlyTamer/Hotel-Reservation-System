@@ -61,5 +61,25 @@ public class ReservationService {
         }
         return dtos;
     }
-
+public ReservationDTO updateReservation(int id,ReservationDTO res){
+        Reservation currentRes= reservationRepo.findById(id).orElseThrow();
+        currentRes.setCheckInDate(res.getCheckInDate());
+        currentRes.setCheckOutDate(res.getCheckOutDate());
+        currentRes.setStatus(Status.BOOKED);
+        reservationRepo.save(currentRes);
+        return new ReservationDTO(
+                currentRes.getId(),
+                currentRes.getUserId().getId(),
+                currentRes.getRoomId().getId(),
+                currentRes.getCheckInDate(),
+                currentRes.getCheckOutDate(),
+                currentRes.getStatus()
+        );
+}
+    public void cancelReservation(int id){
+        if(!reservationRepo.existsById(id)){
+            System.out.println("Reservation not found");
+        }
+        reservationRepo.deleteById(id);
+    }
 }
