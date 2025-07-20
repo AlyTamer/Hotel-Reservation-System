@@ -23,7 +23,7 @@ public List<RoomDTO> getRooms(String type) {
         rooms=roomRepo.findAllByRoomType(type);
     }
     else {
-        rooms=roomRepo.findAll(Status.AVAILABLE);
+        rooms=roomRepo.findAllByStatus(Status.AVAILABLE);
     }
     List<RoomDTO> roomDTOS = new ArrayList<>();
     for(Room room:rooms) {
