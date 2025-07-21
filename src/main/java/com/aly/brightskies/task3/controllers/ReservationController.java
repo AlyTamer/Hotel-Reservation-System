@@ -28,7 +28,7 @@ public class ReservationController {
     }
     @PostMapping("/reservation/delete")
     public void deleteReservation(@RequestParam int resId){
-        reservationService.cancelReservation(resId);
+        reservationService.deleteReservation(resId);
     }
     @PostMapping("/reservation/update")
     public ReservationDTO updateReservation(@RequestParam int id,

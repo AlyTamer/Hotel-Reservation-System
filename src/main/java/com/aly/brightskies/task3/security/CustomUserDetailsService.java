@@ -3,10 +3,12 @@ package com.aly.brightskies.task3.security;
 import com.aly.brightskies.task3.entities.User;                // your JPA entity
 import com.aly.brightskies.task3.repositories.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.List;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -24,7 +26,8 @@ public class CustomUserDetailsService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(
                 appUser.getName(),
                 appUser.getPassword(),
-                Collections.emptyList()
+                List.of(new SimpleGrantedAuthority(appUser.getRole().name()))
+
         );
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.util.Collections;
 
@@ -33,7 +34,7 @@ public class WebSecurityConfig {
             if(!authentication.getCredentials().equals(userDetails.getPassword())){
                 throw new RuntimeException("Password Invalid");
             }
-        return new UsernamePasswordAuthenticationToken(userDetails,null, Collections.emptyList());}
+        return new UsernamePasswordAuthenticationToken(userDetails,null, Collections.emptyList());};
 
 
     }
@@ -42,11 +43,10 @@ public class WebSecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorizeHTTPRequests -> authorizeHTTPRequests
-                .requestMatchers("/login") .permitAll()
-                .requestMatchers("/signin").permitAll()
-                .requestMatchers("/signup").permitAll()
+                .requestMatchers("/signin","/signup").permitAll()
+                .requestMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated())
-                .addFilter(jwtFilter);
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
     @Bean

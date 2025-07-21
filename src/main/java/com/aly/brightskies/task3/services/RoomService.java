@@ -38,4 +38,18 @@ public List<RoomDTO> getRooms(String type) {
     return roomDTOS;
 }
 
+
+    public Room updateRoom(int id,Room r) {
+        Room current =roomRepo.findById(id);
+        current.setRoomNumber(r.getRoomNumber());
+        current.setRoomType(r.getRoomType());
+        current.setStatus(r.getStatus());
+        current.setId(r.getId());
+        roomRepo.save(current);
+        return current;
+    }
+
+    public void deleteRoom(int id) {
+        roomRepo.deleteById(id);
+    }
 }

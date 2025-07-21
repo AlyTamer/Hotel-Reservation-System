@@ -1,8 +1,6 @@
 package com.aly.brightskies.task3.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +19,8 @@ public class User {
     private String email;
     private int number;
     private String password;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     public User(int id, String name, String email, int number) {
         this.id = id;

@@ -1,10 +1,14 @@
 package com.aly.brightskies.task3.security;
 
+import com.aly.brightskies.task3.entities.User;
+import com.aly.brightskies.task3.repositories.UserRepo;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.relational.core.sql.FalseCondition;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -14,18 +18,24 @@ import java.util.Date;
 public class JWTUtility {
     @Value("${jwt.secret}")
     private String secret;
-    @Value("${jwt.expirationTime}")
+    @Value("${jwt.expiration}")
     private int expirationTime;
     private Key key;
+    @Autowired
+    private UserRepo userRepo;
+
     @PostConstruct
     public void init() {
         this.key= Keys.hmacShaKeyFor(secret.getBytes());
     }
     public String generateToken(String username){
+        User user = userRepo.findByName(username);
         return Jwts.builder()
-                .signWith(key, SignatureAlgorithm.HS256)
+                .setSubject(username)
+                .claim("role", user.getRole().name())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(new Date().getTime()+expirationTime))
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
     public String getUsername(String token){
@@ -39,8 +49,17 @@ public class JWTUtility {
     public boolean validateToken(String token){
         try{
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-            //TODO IMPLEMENT EXPIRY CHECK
+            if( Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getExpiration()
+                    .before(new Date()))
             return true;
+            else{
+                throw new Exception("Invalid token");
+            }
         }
         catch (Exception e){
             System.out.println("Failed to validate token: " + e.getMessage());

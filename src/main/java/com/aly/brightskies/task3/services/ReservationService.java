@@ -28,7 +28,7 @@ public class ReservationService {
     @SuppressWarnings("All")
     public ReservationDTO createReservation(ReservationDTO res) {
         User user = userRepo.findById(res.getUserId()).orElseThrow();
-        Room room  = roomRepo.findById(res.getRoomId()).orElseThrow();
+        Room room  = roomRepo.findById(res.getRoomId());
         Reservation r = new Reservation();
         r.setUserId(user);
         r.setRoomId(room);
@@ -77,10 +77,12 @@ public ReservationDTO updateReservation(int id,ReservationDTO res){
                 currentRes.getStatus()
         );
 }
-    public void cancelReservation(int id){
+    public void deleteReservation(int id){
         if(!reservationRepo.existsById(id)){
             System.out.println("Reservation not found");
         }
         reservationRepo.deleteById(id);
     }
+
+
 }
