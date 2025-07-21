@@ -36,9 +36,10 @@ public class UserService {
     public List<UserDTO> findAll() {
         List<UserDTO> list = new ArrayList<>();
         List<User> users = userRepo.findAll();
-        UserDTO userDTO = new UserDTO();
+
         try {
             for (User user : users) {
+                UserDTO userDTO = new UserDTO();
                 userDTO.setEmail(user.getEmail());
                 userDTO.setId(user.getId());
                 userDTO.setNumber(user.getNumber());

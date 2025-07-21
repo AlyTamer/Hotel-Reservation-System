@@ -54,14 +54,11 @@ public List<RoomDTO> getRooms(String type) {
     }
 
     public List<Room> getAllRooms() {
-    if(!roomRepo.findAll().isEmpty()) {
         return roomRepo.findAll();
-    }
-    return null;
     }
 
     public Room createNewRoom(Room r) {
-        Room newRoom = roomRepo.save(r);
-        return newRoom;
+
+        return roomRepo.save(r);
     }
 }

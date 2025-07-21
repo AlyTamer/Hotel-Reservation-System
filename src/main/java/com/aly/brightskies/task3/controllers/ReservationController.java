@@ -23,12 +23,12 @@ public class ReservationController {
 
 }
     @PostMapping("/reservation")
-    public void createReservation(@RequestParam ReservationDTO reservation){
+    public void createReservation(@RequestBody ReservationDTO reservation){
         reservationService.createReservation(reservation);
     }
-    @PostMapping("/reservation/delete")
-    public void deleteReservation(@RequestParam int resId){
-        reservationService.deleteReservation(resId);
+    @PostMapping("/reservation/{id}")
+    public void deleteReservation(@PathVariable int id){
+        reservationService.deleteReservation(id);
     }
     @PostMapping("/reservation/update")
     public ReservationDTO updateReservation(@RequestParam int id,

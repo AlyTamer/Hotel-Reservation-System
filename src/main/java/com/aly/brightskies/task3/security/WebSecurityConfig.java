@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -23,19 +24,22 @@ public class WebSecurityConfig {
     private final CustomUserDetailsService userDetailsService;
     private final JWTFilter jwtFilter;
 
+
     @Autowired
     public WebSecurityConfig(CustomUserDetailsService userDetailsService, JWTFilter jwtFilter) {
         this.userDetailsService = userDetailsService;
         this.jwtFilter = jwtFilter;
+
     }
 
     @Bean
-    public AuthenticationManager authManager() throws RuntimeException {
+    public AuthenticationManager authManager(PasswordEncoder passwordEncoder) throws RuntimeException {
         return authentication -> {
         UserDetails userDetails = userDetailsService.loadUserByUsername(authentication.getPrincipal().toString());
         if(userDetails==null) throw new UsernameNotFoundException("User not found");
-        if(!authentication.getCredentials().equals(userDetails.getPassword())){
-                throw new RuntimeException("Password Invalid");
+        if (!passwordEncoder.matches(authentication.getCredentials().toString(),
+                userDetails.getPassword())) {
+                throw new BadCredentialsException("Invalid password");
             }
         return new UsernamePasswordAuthenticationToken(userDetails,null, Collections.emptyList());};
 

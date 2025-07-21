@@ -86,10 +86,8 @@ public ReservationDTO updateReservation(int id,ReservationDTO res){
 
 
     public List<Reservation> getAllReservations() {
-        if(!reservationRepo.findAll().isEmpty()) {
             return reservationRepo.findAll();
-        }
-        return null;
+
     }
 
     public Reservation createReservation(Reservation r) {
