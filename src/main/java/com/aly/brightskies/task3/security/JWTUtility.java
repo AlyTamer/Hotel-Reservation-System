@@ -8,13 +8,13 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.relational.core.sql.FalseCondition;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
 
 @Component
+@SuppressWarnings("all")
 public class JWTUtility {
     @Value("${jwt.secret}")
     private String secret;
@@ -27,6 +27,9 @@ public class JWTUtility {
     @PostConstruct
     public void init() {
         this.key= Keys.hmacShaKeyFor(secret.getBytes());
+    }
+    public Key getKey() {
+        return key;
     }
     public String generateToken(String username){
         User user = userRepo.findByName(username);
@@ -55,7 +58,7 @@ public class JWTUtility {
                     .parseClaimsJws(token)
                     .getBody()
                     .getExpiration()
-                    .before(new Date()))
+                    .after(new Date()))
             return true;
             else{
                 throw new Exception("Invalid token");

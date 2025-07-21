@@ -1,39 +1,61 @@
 package com.aly.brightskies.task3.services;
 
-import com.aly.brightskies.task3.dto.ReservationDTO;
 import com.aly.brightskies.task3.dto.UserDTO;
-import com.aly.brightskies.task3.entities.Reservation;
 import com.aly.brightskies.task3.entities.Role;
-import com.aly.brightskies.task3.entities.Status;
 import com.aly.brightskies.task3.entities.User;
-import com.aly.brightskies.task3.repositories.ReservationRepo;
-import com.aly.brightskies.task3.repositories.RoomRepo;
 import com.aly.brightskies.task3.repositories.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class UserService {
-    private final RoomRepo roomRepo;
-    private final ReservationRepo reservationRepo;
+
     private final UserRepo userRepo;
     @Autowired
-    public UserService(RoomRepo roomRepo, ReservationRepo reservationRepo, UserRepo userRepo) {
-        this.reservationRepo = reservationRepo;
+    public UserService( UserRepo userRepo) {
         this.userRepo = userRepo;
-        this.roomRepo = roomRepo;
+
     }
 
-    public User updateUserRole(int id, Role newRole) {
+    public void updateUserRole(int id, Role newRole) {
         try {
-            User user = userRepo.findById(id).get();
+            User user = userRepo.findById(id).isPresent() ? userRepo.findById(id).get() : null;
+            if (user != null) {
             user.setRole(newRole);
             userRepo.save(user);
-            return user;
+            return;}
+            throw new Exception("User not found");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
+
+    public List<UserDTO> findAll() {
+        List<UserDTO> list = new ArrayList<>();
+        List<User> users = userRepo.findAll();
+        UserDTO userDTO = new UserDTO();
+        try {
+            for (User user : users) {
+                userDTO.setEmail(user.getEmail());
+                userDTO.setId(user.getId());
+                userDTO.setNumber(user.getNumber());
+                userDTO.setUsername(user.getName());
+                list.add(userDTO);
+            }
+        } catch (Exception e) {
+            return null;
+        }
+        return list;
+    }
+
+    public void deleteById(int id) {
+        if(userRepo.findById(id).isPresent()) {
+            userRepo.deleteById(id);
+        }
+
+    }
+
 }

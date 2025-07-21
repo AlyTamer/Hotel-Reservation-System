@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,17 +20,21 @@ import java.util.Collections;
 @EnableWebSecurity
 
 public class WebSecurityConfig {
+    private final CustomUserDetailsService userDetailsService;
+    private final JWTFilter jwtFilter;
+
     @Autowired
-    private CustomUserDetailsService userDetailsService;
-    @Autowired
-    private JWTFilter jwtFilter;
+    public WebSecurityConfig(CustomUserDetailsService userDetailsService, JWTFilter jwtFilter) {
+        this.userDetailsService = userDetailsService;
+        this.jwtFilter = jwtFilter;
+    }
+
     @Bean
-    public AuthenticationManager authManager() throws Exception {
+    public AuthenticationManager authManager() throws RuntimeException {
         return authentication -> {
         UserDetails userDetails = userDetailsService.loadUserByUsername(authentication.getPrincipal().toString());
         if(userDetails==null) throw new UsernameNotFoundException("User not found");
-        //Check password
-            if(!authentication.getCredentials().equals(userDetails.getPassword())){
+        if(!authentication.getCredentials().equals(userDetails.getPassword())){
                 throw new RuntimeException("Password Invalid");
             }
         return new UsernamePasswordAuthenticationToken(userDetails,null, Collections.emptyList());};

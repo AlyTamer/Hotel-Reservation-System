@@ -35,8 +35,14 @@ public class LoginController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<User> signup(@RequestBody User user) {
+    public ResponseEntity<?> signup(@RequestBody User user) {
+        if (userRepo.existsByEmail(user.getEmail())) {
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body("Email already in use");
+        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+
         if (user.getRole() == null) {
             user.setRole(Role.ROLE_USER);
         }

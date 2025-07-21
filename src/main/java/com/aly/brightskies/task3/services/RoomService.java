@@ -52,4 +52,16 @@ public List<RoomDTO> getRooms(String type) {
     public void deleteRoom(int id) {
         roomRepo.deleteById(id);
     }
+
+    public List<Room> getAllRooms() {
+    if(!roomRepo.findAll().isEmpty()) {
+        return roomRepo.findAll();
+    }
+    return null;
+    }
+
+    public Room createNewRoom(Room r) {
+        Room newRoom = roomRepo.save(r);
+        return newRoom;
+    }
 }

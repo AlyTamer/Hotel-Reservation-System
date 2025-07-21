@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Entity
 public class Room {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private int roomNumber;
     private String roomType;

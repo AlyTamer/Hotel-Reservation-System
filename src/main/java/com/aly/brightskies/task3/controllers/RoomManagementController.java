@@ -16,12 +16,14 @@ public class RoomManagementController {
     private final RoomService roomService;
     @Autowired
     public RoomManagementController(RoomService roomService) {
+
         this.roomService = roomService;
     }
 
     @GetMapping
     public List<RoomDTO> getRooms(@RequestParam(required = false) String type) {
-       return roomService.getRooms(type);
+
+        return roomService.getRooms(type);
     }
 
 }
