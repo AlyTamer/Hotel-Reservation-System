@@ -4,6 +4,8 @@ import com.aly.brightskies.task3.entities.Role;
 import com.aly.brightskies.task3.entities.User;
 import com.aly.brightskies.task3.repositories.UserRepo;
 import com.aly.brightskies.task3.security.JWTUtility;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Tag(name = "Login", description = "User login and registration")
 public class LoginController {
 
     private final UserRepo userRepo;
@@ -34,6 +37,10 @@ public class LoginController {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Operation(
+            summary = "User Signup",
+            description = "Register a new user with email and password. If the email is already in use, returns a conflict status."
+    )
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody User user) {
         if (userRepo.existsByEmail(user.getEmail())) {
@@ -54,6 +61,10 @@ public class LoginController {
                 .body(saved);
     }
 
+    @Operation(
+            summary = "User Signin",
+            description = "Authenticate a user with username and password. Returns a JWT token if successful."
+    )
     @PostMapping("/signin")
     public ResponseEntity<User> signin(@RequestBody User user) {
         try {

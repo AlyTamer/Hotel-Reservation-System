@@ -19,7 +19,7 @@ public class JWTUtility {
     @Value("${jwt.secret}")
     private String secret;
     @Value("${jwt.expiration}")
-    private int expirationTime;
+    private Long expirationTime;
     private Key key;
     @Autowired
     private UserRepo userRepo;
