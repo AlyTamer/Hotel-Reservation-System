@@ -19,10 +19,5 @@ public class Room {
     @Column(nullable = false, length = 20)
     private Status status;
 
-    public Room(int roomNumber, String roomType, boolean status) {
-        this.roomNumber = roomNumber;
-        this.roomType = roomType;
-        this.status = status ? Status.AVAILABLE : Status.BOOKED;
 
-    }
 }

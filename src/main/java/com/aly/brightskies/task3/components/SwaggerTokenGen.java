@@ -10,7 +10,7 @@ public class SwaggerTokenGen implements CommandLineRunner {
     @Autowired
     private JWTUtility jwtUtility;
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args)  {
         try {
             String token = jwtUtility.generateToken("admin");
             System.out.println();
@@ -21,7 +21,7 @@ public class SwaggerTokenGen implements CommandLineRunner {
             System.out.println("─────────────────────────────────────");
             System.out.println();
         } catch (Exception e) {
-            System.out.println("No user found");;
+            System.out.println("No user found");
         }
     }
 }
