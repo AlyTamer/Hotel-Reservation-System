@@ -32,7 +32,7 @@ public class JWTUtility {
         return key;
     }
     public String generateToken(String username){
-        User user = userRepo.findByName(username);
+        User user = userRepo.findByUserName(username);
         return Jwts.builder()
                 .setSubject(username)
                 .claim("role", user.getRole().name())

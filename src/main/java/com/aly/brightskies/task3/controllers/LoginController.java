@@ -63,7 +63,7 @@ public class LoginController {
                         user.getRole()
                 )
         );
-        String token = jwtUtil.generateToken(saved.getName());
+        String token = jwtUtil.generateToken(saved.getUserName());
         System.out.println("Generated token for"+user.getUsername()+" with Role "+user.getRole()+":\n" + token);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -80,12 +80,12 @@ public class LoginController {
         try {
             Authentication auth = authManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            user.getName(),
+                            user.getUserName(),
                             user.getPassword()
                     )
             );
             String token = jwtUtil.generateToken(auth.getName());
-            User loggedIn = userRepo.findByName(auth.getName());
+            User loggedIn = userRepo.findByUserName(auth.getName());
             return ResponseEntity
                     .ok()
                     .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)

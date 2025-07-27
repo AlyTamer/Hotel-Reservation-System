@@ -38,11 +38,14 @@ public class UserService {
         List<User> users = userRepo.findAll();
 
         try {
+            if(users.isEmpty()) {
+                throw new Exception("No users found");
+            }
             for (User user : users) {
                 UserDTO userDTO = new UserDTO();
                 userDTO.setEmail(user.getEmail());
                 userDTO.setNumber(user.getNumber());
-                userDTO.setUsername(user.getName());
+                userDTO.setUsername(user.getUserName());
                 list.add(userDTO);
             }
         } catch (Exception e) {
@@ -52,9 +55,13 @@ public class UserService {
     }
 
     public void deleteById(int id) {
-        if(userRepo.findById(id).isPresent()) {
+
+        if (userRepo.existsById(id)) {
             userRepo.deleteById(id);
         }
+        else
+            throw new RuntimeException("User not found");
+
 
     }
 

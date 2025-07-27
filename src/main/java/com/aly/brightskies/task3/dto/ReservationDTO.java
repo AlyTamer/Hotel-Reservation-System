@@ -22,5 +22,6 @@ public class ReservationDTO {
     private Status status;
 
 
+
 }
 

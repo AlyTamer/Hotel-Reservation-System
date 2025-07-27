@@ -17,6 +17,7 @@ private final RoomRepo roomRepo;
 public RoomService(RoomRepo roomRepo) {
         this.roomRepo = roomRepo;
 }
+
 public List<RoomDTO> getRooms(String type) {
     List<Room> rooms;
     if(type!=null&&!type.isEmpty()) {
