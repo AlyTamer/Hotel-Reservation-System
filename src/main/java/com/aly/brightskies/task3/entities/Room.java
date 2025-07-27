@@ -1,15 +1,13 @@
 package com.aly.brightskies.task3.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString
 @Entity
 public class Room {
     @Id
@@ -18,6 +16,13 @@ public class Room {
     private int roomNumber;
     private String roomType;
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 10)
+    @Column(nullable = false, length = 20)
     private Status status;
+
+    public Room(int roomNumber, String roomType, boolean status) {
+        this.roomNumber = roomNumber;
+        this.roomType = roomType;
+        this.status = status ? Status.AVAILABLE : Status.BOOKED;
+
+    }
 }

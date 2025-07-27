@@ -6,6 +6,7 @@
     import org.springframework.security.authentication.AuthenticationManager;
     import org.springframework.security.authentication.BadCredentialsException;
     import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+    import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
     import org.springframework.security.config.annotation.web.builders.HttpSecurity;
     import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
     import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +20,7 @@
 
     @Configuration
     @EnableWebSecurity
+    @EnableMethodSecurity
 
     public class WebSecurityConfig {
         private final CustomUserDetailsService userDetailsService;
@@ -41,11 +43,12 @@
                         userDetails.getPassword())) {
                     throw new BadCredentialsException("Invalid password");
                 }
-                return new UsernamePasswordAuthenticationToken(userDetails, null, Collections.emptyList());
+                return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             };
 
 
         }
+
 
         @Bean
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -59,7 +62,10 @@
                                     "/swagger-ui/**",
                                     "/webjars/**",
                                     "/v3/api-docs/**",
-                                    "/v3/api-docs"
+                                    "/v3/api-docs",
+                                    "/swagger-resources/**",
+                                    "/swagger-ui/index.html",
+                                    "/swagger-ui/index.html#/**"
                             ).permitAll()
                             .requestMatchers("/admin/**").hasRole("ADMIN")
                             .anyRequest().authenticated())

@@ -1,5 +1,6 @@
 package com.aly.brightskies.task3.controllers;
 
+import com.aly.brightskies.task3.dto.UserDTO;
 import com.aly.brightskies.task3.entities.Role;
 import com.aly.brightskies.task3.entities.User;
 import com.aly.brightskies.task3.repositories.UserRepo;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -42,7 +44,8 @@ public class LoginController {
             description = "Register a new user with email and password. If the email is already in use, returns a conflict status."
     )
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@RequestBody User user) {
+//    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> signup(@RequestBody UserDTO user) {
         if (userRepo.existsByEmail(user.getEmail())) {
             return ResponseEntity
                     .status(HttpStatus.CONFLICT)
@@ -53,8 +56,17 @@ public class LoginController {
         if (user.getRole() == null) {
             user.setRole(Role.ROLE_USER);
         }
-        User saved = userRepo.save(user);
+        User saved = userRepo.save(
+                new User(
+                        user.getUsername(),
+                        user.getEmail(),
+                        user.getNumber(),
+                        user.getPassword(),
+                        user.getRole()
+                )
+        );
         String token = jwtUtil.generateToken(saved.getName());
+        System.out.println("Generated token for"+user.getUsername()+" with Role "+user.getRole()+":\n" + token);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)

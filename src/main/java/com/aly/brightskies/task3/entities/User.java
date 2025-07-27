@@ -15,7 +15,7 @@ import lombok.Setter;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     private String name;
     private String email;
     private int number;
@@ -23,5 +23,12 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-
+    public User(String username, String email, int number, String password, Role role) {
+        this.name = username;
+        this.email = email;
+        this.number = number;
+        this.password = password;
+        this.role = role;
+    }
 }
+

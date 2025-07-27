@@ -41,7 +41,6 @@ public class UserService {
             for (User user : users) {
                 UserDTO userDTO = new UserDTO();
                 userDTO.setEmail(user.getEmail());
-                userDTO.setId(user.getId());
                 userDTO.setNumber(user.getNumber());
                 userDTO.setUsername(user.getName());
                 list.add(userDTO);

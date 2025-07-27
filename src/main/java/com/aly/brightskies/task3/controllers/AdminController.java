@@ -1,18 +1,20 @@
 package com.aly.brightskies.task3.controllers;
 
+import com.aly.brightskies.task3.dto.ReservationDTO;
+import com.aly.brightskies.task3.dto.RoomDTO;
 import com.aly.brightskies.task3.dto.UserDTO;
-import com.aly.brightskies.task3.entities.Reservation;
 import com.aly.brightskies.task3.entities.Role;
-import com.aly.brightskies.task3.entities.Room;
 import com.aly.brightskies.task3.services.ReservationService;
 import com.aly.brightskies.task3.services.RoomService;
 import com.aly.brightskies.task3.services.UserService;
-import io.swagger.v3.oas.annotations.Hidden;
+//import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +23,7 @@ import java.util.List;
 @RequestMapping("/admin")
 @Tag(name = "Admin Management",
         description = "Admin operations for managing rooms, reservations, and users")
+@PreAuthorize("hasRole('ADMIN')")
 public class AdminController {
     private final RoomService roomService;
     private final ReservationService reservationService;
@@ -42,8 +45,8 @@ public class AdminController {
             security = @SecurityRequirement(name = "bearerAuth")
     )
     @GetMapping("/rooms")
-    public List<Room> getAllRooms() {
-        return roomService.getAllRooms();
+    public List<RoomDTO> getAllRooms() {
+        return roomService.getAllRoomDTOs();
     }
 
     @Operation(
@@ -51,10 +54,12 @@ public class AdminController {
             description = "Add a new room to the system",
             security = @SecurityRequirement(name = "bearerAuth")
     )
-    @Hidden
+    //@Hidden
     @PostMapping("/rooms")
-    public ResponseEntity<Room> createRoom(@RequestBody Room r) {
-        Room newRoom = roomService.createNewRoom(r);
+    public ResponseEntity<RoomDTO> createRoom(@RequestBody RoomDTO r) {
+        System.out.println("Current auth: " + SecurityContextHolder.getContext().getAuthentication());
+        RoomDTO newRoom = roomService.createNewRoom(r);
+        System.out.println("Room created: " + newRoom);
         return ResponseEntity.ok(newRoom);
     }
 
@@ -63,12 +68,12 @@ public class AdminController {
             description = "Modify the details of an existing room",
             security = @SecurityRequirement(name = "bearerAuth")
     )
-    @Hidden
+    //@Hidden
     @PutMapping("/rooms/{id}")
-    public ResponseEntity<Room> updateRoom(@PathVariable int id,
-                                           @RequestBody Room r) {
-        Room current = roomService.updateRoom(id, r);
-        return ResponseEntity.ok(current);
+    public ResponseEntity<RoomDTO> updateRoom(@PathVariable int id,
+                                           @RequestBody RoomDTO r) {
+        RoomDTO updated = roomService.updateRoom(id,r);
+        return ResponseEntity.ok(updated);
     }
 
     @Operation(
@@ -76,7 +81,7 @@ public class AdminController {
             description = "Remove a room from the system by its ID",
             security = @SecurityRequirement(name = "bearerAuth")
     )
-    @Hidden
+    //@Hidden
     @DeleteMapping("/rooms/{id}")
     public ResponseEntity<Void> deleteRoom(@PathVariable int id) {
         roomService.deleteRoom(id);
@@ -89,8 +94,8 @@ public class AdminController {
             security = @SecurityRequirement(name = "bearerAuth")
     )
     @GetMapping("/reservations")
-    public List<Reservation> getAllReservations() {
-        return reservationService.getAllReservations();
+    public List<ReservationDTO> getAllReservations() {
+        return reservationService.getAllReservationDTOs();
     }
 
     @Operation(
@@ -98,7 +103,7 @@ public class AdminController {
             description = "Remove a reservation from the system by its ID",
             security = @SecurityRequirement(name = "bearerAuth")
     )
-    @Hidden
+    //@Hidden
     @DeleteMapping("/reservations/{id}")
     public void deleteReservation(@PathVariable int id) {
         reservationService.deleteReservation(id);
@@ -109,12 +114,13 @@ public class AdminController {
             description = "Add a new reservation to the system",
             security = @SecurityRequirement(name = "bearerAuth")
     )
-    @Hidden
+    //@Hidden
     @PostMapping("/reservations/create")
-    public ResponseEntity<Reservation> createReservation(@RequestBody Reservation r) {
-        Reservation newRes = reservationService.createReservation(r);
-        return ResponseEntity.ok(newRes);
+    public ResponseEntity<ReservationDTO> createReservation(@RequestBody ReservationDTO dto) {
+        ReservationDTO created = reservationService.createReservation(dto);
+        return ResponseEntity.ok(created);
     }
+
 
     @Operation(
             summary = "Get all users",
@@ -131,7 +137,7 @@ public class AdminController {
             description = "Update the role of a user by their ID",
             security = @SecurityRequirement(name = "bearerAuth")
     )
-    @Hidden
+    //@Hidden
     @PutMapping("/users/{id}/role")
     public void changeUserRole(@PathVariable int id,
                                @RequestParam Role newRole) {
@@ -150,7 +156,7 @@ public class AdminController {
             description = "Remove a user from the system by their ID",
             security = @SecurityRequirement(name = "bearerAuth")
     )
-    @Hidden
+    //@Hidden
     @DeleteMapping("/users/{id}")
     public void deleteUser(@PathVariable int id) {
         userService.deleteById(id);

@@ -19,79 +19,91 @@ public class ReservationService {
     private final RoomRepo roomRepo;
     private final ReservationRepo reservationRepo;
     private final UserRepo userRepo;
+
     @Autowired
     public ReservationService(RoomRepo roomRepo, ReservationRepo reservationRepo, UserRepo userRepo) {
         this.reservationRepo = reservationRepo;
         this.userRepo = userRepo;
         this.roomRepo = roomRepo;
     }
-    @SuppressWarnings("All")
-    public ReservationDTO createReservation(ReservationDTO res) {
-        User user = userRepo.findById(res.getUserId()).orElseThrow();
-        Room room  = roomRepo.findById(res.getRoomId());
-        Reservation r = new Reservation();
-        r.setUserId(user);
-        r.setRoomId(room);
-        r.setCheckInDate(res.getCheckInDate());
-        r.setCheckOutDate(res.getCheckOutDate());
-        r.setStatus(Status.BOOKED);
-        reservationRepo.save(r);
-        return new ReservationDTO(
-                r.getId(),
-                r.getUserId().getId(),
-                r.getRoomId().getId(),
-                r.getCheckInDate(),
-                r.getCheckOutDate(),
-                Status.BOOKED
-        );
-    }
-    public List<ReservationDTO> getUserReservation(int userId){
-        User user = userRepo.findById(userId).orElseThrow();
+
+
+    public List<ReservationDTO> getUserReservation(int userId) {
+        User user = userRepo.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         List<Reservation> reservations = reservationRepo.getAllByUserId(user);
         List<ReservationDTO> dtos = new ArrayList<>();
-        for(Reservation reservation : reservations){
-            ReservationDTO dto = new ReservationDTO(
-                    reservation.getId(),
-                    reservation.getUserId().getId(),
-                    reservation.getRoomId().getId(),
-                    reservation.getCheckInDate(),
-                    reservation.getCheckOutDate(),
-                    reservation.getStatus());
-            dtos.add(dto);
-
+        for (Reservation reservation : reservations) {
+            dtos.add(toReservationDTO(reservation));
         }
         return dtos;
     }
-public ReservationDTO updateReservation(int id,ReservationDTO res){
-        Reservation currentRes= reservationRepo.findById(id).orElseThrow();
+
+    public ReservationDTO updateReservation(int id, ReservationDTO res) {
+        Reservation currentRes = reservationRepo.findById(id).orElseThrow(() -> new RuntimeException("Reservation not found"));
         currentRes.setCheckInDate(res.getCheckInDate());
         currentRes.setCheckOutDate(res.getCheckOutDate());
-        currentRes.setStatus(Status.BOOKED);
+        currentRes.setStatus(res.getStatus());
         reservationRepo.save(currentRes);
-        return new ReservationDTO(
-                currentRes.getId(),
-                currentRes.getUserId().getId(),
-                currentRes.getRoomId().getId(),
-                currentRes.getCheckInDate(),
-                currentRes.getCheckOutDate(),
-                currentRes.getStatus()
-        );
-}
-    public void deleteReservation(int id){
-        if(!reservationRepo.existsById(id)){
-            System.out.println("Reservation not found");
+        return toReservationDTO(currentRes);
+    }
+
+    public void deleteReservation(int id) {
+        if (!reservationRepo.existsById(id)) {
+            throw new RuntimeException("Reservation not found");
         }
         reservationRepo.deleteById(id);
     }
 
-
     public List<Reservation> getAllReservations() {
-            return reservationRepo.findAll();
-
+        return reservationRepo.findAll();
     }
 
-    public Reservation createReservation(Reservation r) {
-        return reservationRepo.save(r);
-
+    public ReservationDTO toReservationDTO(Reservation reservation) {
+        return new ReservationDTO(
+                reservation.getId(),
+                reservation.getUserId().getId(),
+                reservation.getRoomId().getId(),
+                reservation.getCheckInDate(),
+                reservation.getCheckOutDate(),
+                reservation.getStatus()
+        );
     }
+
+    private Reservation toReservationEntity(ReservationDTO dto) {
+        Reservation reservation = new Reservation();
+        reservation.setId(dto.getId());
+        reservation.setUserId(userRepo.findById(dto.getUserId()).orElseThrow(() -> new RuntimeException("User not found")));
+        reservation.setRoomId(roomRepo.findById(dto.getRoomId()));
+        reservation.setCheckInDate(dto.getCheckInDate());
+        reservation.setCheckOutDate(dto.getCheckOutDate());
+        reservation.setStatus(dto.getStatus());
+        return reservation;
+    }
+
+    public int getReservationById(int id) {
+        Reservation reservation = reservationRepo.findById(id).orElseThrow(() -> new RuntimeException("Reservation not found"));
+        return reservation.getId();
+    }
+    public List<ReservationDTO> getAllReservationDTOs() {
+        List<Reservation> reservations = reservationRepo.findAll();
+        List<ReservationDTO> dtos = new ArrayList<>();
+        for (Reservation reservation : reservations) {
+            dtos.add(toReservationDTO(reservation));
+        }
+        return dtos;
+    }
+    public ReservationDTO createReservation(ReservationDTO dto) {
+        Reservation reservation = new Reservation();
+        reservation.setUserId(userRepo.findById(dto.getUserId()).orElseThrow(() -> new RuntimeException("User not found")));
+        reservation.setRoomId(roomRepo.findById(dto.getRoomId()));
+        reservation.setCheckInDate(dto.getCheckInDate());
+        reservation.setCheckOutDate(dto.getCheckOutDate());
+        reservation.setStatus(dto.getStatus());
+
+        Reservation saved = reservationRepo.save(reservation);
+        return toReservationDTO(saved);
+    }
+
+
+
 }

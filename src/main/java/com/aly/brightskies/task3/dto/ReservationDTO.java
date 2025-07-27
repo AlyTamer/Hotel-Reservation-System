@@ -18,6 +18,12 @@ public class ReservationDTO {
     private Date checkInDate;
     private Date checkOutDate;
     private Status status;
+public ReservationDTO( int userId, Date checkInDate, Date checkOutDate, Status status) {
+    this.userId = userId;
+    this.checkInDate = checkInDate;
+    this.checkOutDate = checkOutDate;
+    this.status = status;
+}
 
 }
 
