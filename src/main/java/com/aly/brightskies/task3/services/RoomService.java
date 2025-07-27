@@ -30,7 +30,7 @@ public List<RoomDTO> getRooms(String type) {
         RoomDTO dto = new RoomDTO(
                 room.getRoomNumber(),
                 room.getRoomType(),
-                room.getStatus()==Status.AVAILABLE
+                room.getStatus()
         );
         roomDTOS.add(dto);
     }
@@ -48,7 +48,7 @@ public List<RoomDTO> getAllRoomDTOs() {
         Room room = new Room();
         room.setRoomNumber(dto.getRoomNumber());
         room.setRoomType(dto.getRoomType());
-        room.setStatus(dto.isStatus() ? Status.AVAILABLE : Status.BOOKED);
+        room.setStatus(dto.getStatus());
 
         Room saved = roomRepo.save(room);
         return toRoomDTO(saved);
@@ -58,55 +58,21 @@ public RoomDTO updateRoom(int id,RoomDTO dto) {
     Room current = roomRepo.findById(id);
     current.setRoomNumber(dto.getRoomNumber());
     current.setRoomType(dto.getRoomType());
-    current.setStatus(dto.isStatus()?Status.AVAILABLE:Status.BOOKED);
-    roomRepo.save(current);
+    current.setStatus(dto.getStatus());
     return toRoomDTO(current);
 }
 private RoomDTO toRoomDTO(Room room) {
     return new RoomDTO(
             room.getRoomNumber(),
             room.getRoomType(),
-            room.getStatus() == Status.AVAILABLE
+            room.getStatus()
     );
 }
-private Room toRoomEntity(RoomDTO dto) {
-    Room room = new Room();
-    room.setId(dto.getId());
-    room.setRoomNumber(dto.getRoomNumber());
-    room.setRoomType(dto.getRoomType());
-    room.setStatus(dto.isStatus() ? Status.AVAILABLE : Status.BOOKED);
-    return room;
-}
-
-    public Room updateRoom(int id,Room r) {
-        Room current =roomRepo.findById(id);
-        current.setRoomNumber(r.getRoomNumber());
-        current.setRoomType(r.getRoomType());
-        current.setStatus(r.getStatus());
-        current.setId(r.getId());
-        roomRepo.save(current);
-        return current;
-    }
 
     public void deleteRoom(int id) {
         roomRepo.deleteById(id);
     }
 
-    public List<Room> getAllRooms() {
-        return roomRepo.findAll();
-    }
 
-    public Room createNewRoom(Room r) {
-
-        return roomRepo.save(r);
-    }
-    public int getRoomById(int id) {
-        Room room = roomRepo.findById(id);
-        if (room != null) {
-            return room.getId();
-        } else {
-            throw new RuntimeException("Room not found with id: " + id);
-        }
-    }
 
 }

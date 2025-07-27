@@ -2,8 +2,6 @@ package com.aly.brightskies.task3.services;
 
 import com.aly.brightskies.task3.dto.ReservationDTO;
 import com.aly.brightskies.task3.entities.Reservation;
-import com.aly.brightskies.task3.entities.Room;
-import com.aly.brightskies.task3.entities.Status;
 import com.aly.brightskies.task3.entities.User;
 import com.aly.brightskies.task3.repositories.ReservationRepo;
 import com.aly.brightskies.task3.repositories.RoomRepo;
@@ -54,10 +52,6 @@ public class ReservationService {
         reservationRepo.deleteById(id);
     }
 
-    public List<Reservation> getAllReservations() {
-        return reservationRepo.findAll();
-    }
-
     public ReservationDTO toReservationDTO(Reservation reservation) {
         return new ReservationDTO(
                 reservation.getId(),
@@ -69,21 +63,7 @@ public class ReservationService {
         );
     }
 
-    private Reservation toReservationEntity(ReservationDTO dto) {
-        Reservation reservation = new Reservation();
-        reservation.setId(dto.getId());
-        reservation.setUserId(userRepo.findById(dto.getUserId()).orElseThrow(() -> new RuntimeException("User not found")));
-        reservation.setRoomId(roomRepo.findById(dto.getRoomId()));
-        reservation.setCheckInDate(dto.getCheckInDate());
-        reservation.setCheckOutDate(dto.getCheckOutDate());
-        reservation.setStatus(dto.getStatus());
-        return reservation;
-    }
 
-    public int getReservationById(int id) {
-        Reservation reservation = reservationRepo.findById(id).orElseThrow(() -> new RuntimeException("Reservation not found"));
-        return reservation.getId();
-    }
     public List<ReservationDTO> getAllReservationDTOs() {
         List<Reservation> reservations = reservationRepo.findAll();
         List<ReservationDTO> dtos = new ArrayList<>();

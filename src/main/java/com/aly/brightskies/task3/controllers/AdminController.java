@@ -54,7 +54,7 @@ public class AdminController {
             description = "Add a new room to the system",
             security = @SecurityRequirement(name = "bearerAuth")
     )
-    //@Hidden
+    
     @PostMapping("/rooms")
     public ResponseEntity<RoomDTO> createRoom(@RequestBody RoomDTO r) {
         System.out.println("Current auth: " + SecurityContextHolder.getContext().getAuthentication());
@@ -68,7 +68,7 @@ public class AdminController {
             description = "Modify the details of an existing room",
             security = @SecurityRequirement(name = "bearerAuth")
     )
-    //@Hidden
+    
     @PutMapping("/rooms/{id}")
     public ResponseEntity<RoomDTO> updateRoom(@PathVariable int id,
                                            @RequestBody RoomDTO r) {
@@ -81,7 +81,7 @@ public class AdminController {
             description = "Remove a room from the system by its ID",
             security = @SecurityRequirement(name = "bearerAuth")
     )
-    //@Hidden
+    
     @DeleteMapping("/rooms/{id}")
     public ResponseEntity<Void> deleteRoom(@PathVariable int id) {
         roomService.deleteRoom(id);
@@ -103,7 +103,7 @@ public class AdminController {
             description = "Remove a reservation from the system by its ID",
             security = @SecurityRequirement(name = "bearerAuth")
     )
-    //@Hidden
+    
     @DeleteMapping("/reservations/{id}")
     public void deleteReservation(@PathVariable int id) {
         reservationService.deleteReservation(id);
@@ -114,7 +114,7 @@ public class AdminController {
             description = "Add a new reservation to the system",
             security = @SecurityRequirement(name = "bearerAuth")
     )
-    //@Hidden
+    
     @PostMapping("/reservations/create")
     public ResponseEntity<ReservationDTO> createReservation(@RequestBody ReservationDTO dto) {
         ReservationDTO created = reservationService.createReservation(dto);
@@ -137,7 +137,7 @@ public class AdminController {
             description = "Update the role of a user by their ID",
             security = @SecurityRequirement(name = "bearerAuth")
     )
-    //@Hidden
+    
     @PutMapping("/users/{id}/role")
     public void changeUserRole(@PathVariable int id,
                                @RequestParam Role newRole) {
@@ -156,7 +156,7 @@ public class AdminController {
             description = "Remove a user from the system by their ID",
             security = @SecurityRequirement(name = "bearerAuth")
     )
-    //@Hidden
+    
     @DeleteMapping("/users/{id}")
     public void deleteUser(@PathVariable int id) {
         userService.deleteById(id);

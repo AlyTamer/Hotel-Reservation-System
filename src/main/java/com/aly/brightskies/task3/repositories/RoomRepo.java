@@ -17,5 +17,4 @@ public interface RoomRepo extends JpaRepository<Room,Integer> {
     @Query("SELECT r FROM Room r WHERE r.status = :status")
     List<Room> findAllByStatus(Status status);
 
-    int getRoomById(int id);
 }
