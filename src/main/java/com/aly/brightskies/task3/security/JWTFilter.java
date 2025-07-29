@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.util.List;                                          // ← new
 
 @Component
-@SuppressWarnings("all")
 public class JWTFilter extends OncePerRequestFilter {
     @Autowired
     private JWTUtility JWTUtility;

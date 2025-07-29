@@ -5,7 +5,6 @@
     import org.springframework.context.annotation.Bean;
     import org.springframework.context.annotation.Configuration;
     import org.springframework.security.authentication.AuthenticationManager;
-    import org.springframework.security.authentication.BadCredentialsException;
     import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
     import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
     import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -36,7 +35,7 @@
         @Bean
         public AuthenticationManager authManager(PasswordEncoder passwordEncoder) throws RuntimeException {
             return authentication -> {
-                UserDetails userDetails = null;
+                UserDetails userDetails;
                 try {
                     userDetails = userDetailsService.loadUserByUsername(authentication.getPrincipal().toString());
                 } catch (Exception e) {

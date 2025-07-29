@@ -15,7 +15,6 @@ import java.security.Key;
 import java.util.Date;
 
 @Component
-@SuppressWarnings("all")
 public class JWTUtility {
     @Value("${jwt.secret}")
     private String secret;
