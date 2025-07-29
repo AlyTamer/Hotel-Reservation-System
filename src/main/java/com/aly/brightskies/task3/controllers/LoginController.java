@@ -3,10 +3,10 @@ package com.aly.brightskies.task3.controllers;
 import com.aly.brightskies.task3.dto.UserDTO;
 import com.aly.brightskies.task3.entities.Role;
 import com.aly.brightskies.task3.entities.User;
-import com.aly.brightskies.task3.exceptions.ConflictException;
-import com.aly.brightskies.task3.exceptions.UnauthorizedException;
+import com.aly.brightskies.task3.exceptions.*;
 import com.aly.brightskies.task3.repositories.UserRepo;
 import com.aly.brightskies.task3.security.JWTUtility;
+import com.aly.brightskies.task3.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,16 +27,19 @@ public class LoginController {
     private final AuthenticationManager authManager;
     private final JWTUtility jwtUtil;
     private final PasswordEncoder passwordEncoder;
+    private final UserService userService;
 
     @Autowired
     public LoginController(UserRepo userRepo,
                            AuthenticationManager authManager,
                            JWTUtility jwtUtil,
-                           PasswordEncoder passwordEncoder) {
+                           PasswordEncoder passwordEncoder,
+                           UserService userService) {
         this.userRepo = userRepo;
         this.authManager = authManager;
         this.jwtUtil = jwtUtil;
         this.passwordEncoder = passwordEncoder;
+        this.userService = userService;
     }
 
     @Operation(
@@ -45,10 +48,10 @@ public class LoginController {
     )
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody UserDTO user) {
-        if (userRepo.existsByUserName((user.getUsername())))
-            throw new ConflictException("Username is already in use");
-        if (userRepo.existsByEmail((user.getEmail())))
-            throw new ConflictException("Email is already in use");
+        if (userService.existsByUsername(user.getUsername()))
+            throw new UserException(UserExceptionMessages.USERNAME_ALREADY_EXIST);
+        if (userService.existsByEmail((user.getEmail())))
+            throw new UserException(UserExceptionMessages.EMAIL_ALREADY_EXIST);
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
@@ -92,7 +95,7 @@ public class LoginController {
                     .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                     .body(loggedIn);
         } catch (Exception ex) {
-            throw new UnauthorizedException("Invalid username or password");
+            throw new UnauthorizedException(UnauthorizedMessages.INVALID_CREDENTIALS);
         }
     }
 }

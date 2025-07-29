@@ -1,7 +1,7 @@
 package com.aly.brightskies.task3.security;
 
-import com.aly.brightskies.task3.exceptions.ConflictException;
-import com.aly.brightskies.task3.exceptions.ForbiddenException;
+import com.aly.brightskies.task3.exceptions.UnauthorizedException;
+import com.aly.brightskies.task3.exceptions.UnauthorizedMessages;
 import io.jsonwebtoken.Claims;                                    // ← new
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -40,8 +40,9 @@ public class JWTFilter extends OncePerRequestFilter {
             if (JWTUtility.validateToken(token)) {
                 username = JWTUtility.getUsername(token);
             }
+            else throw new UnauthorizedException(UnauthorizedMessages.INVALID_TOKEN);
         }
-        else throw new ConflictException("Invalid Request");
+        else throw new UnauthorizedException(UnauthorizedMessages.MISSING_HEADER);
         if (username != null
                 && SecurityContextHolder.getContext().getAuthentication() == null) {
             Claims claims = io.jsonwebtoken.Jwts.parserBuilder()
@@ -64,7 +65,7 @@ public class JWTFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(auth);
         }
         else{
-            throw new ForbiddenException("Invalid Token/Credentials");
+            throw new UnauthorizedException(UnauthorizedMessages.INVALID_CREDENTIALS);
         }
 
         filterChain.doFilter(request, response);

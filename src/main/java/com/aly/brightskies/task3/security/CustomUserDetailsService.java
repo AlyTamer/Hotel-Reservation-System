@@ -1,6 +1,8 @@
 package com.aly.brightskies.task3.security;
 
 import com.aly.brightskies.task3.entities.User;                // your JPA entity
+import com.aly.brightskies.task3.exceptions.UserException;
+import com.aly.brightskies.task3.exceptions.UserExceptionMessages;
 import com.aly.brightskies.task3.repositories.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -23,7 +25,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User appUser = userRepo.findByUserName(username);
         if (appUser == null) {
-            throw new UsernameNotFoundException("User not found: " + username);
+            throw new UserException(UserExceptionMessages.USER_NOT_FOUND);
         }
 
 

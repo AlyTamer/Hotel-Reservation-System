@@ -11,31 +11,8 @@ import java.time.Instant;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(ForbiddenException.class)
-    public ResponseEntity<ErrorDTO> handleForbiddenException(ForbiddenException ex, WebRequest request) {
-        ErrorDTO errorDTO = new ErrorDTO(
-                Instant.now(),
-                HttpStatus.FORBIDDEN.value(),
-                ex.getMessage(),
-                HttpStatus.FORBIDDEN.getReasonPhrase(),
-                request.getDescription(false));
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorDTO);
-    }
-
-    @ExceptionHandler(ConflictException.class)
-    public ResponseEntity<ErrorDTO> handleConflictException(ConflictException ex, WebRequest request) {
-        ErrorDTO errorDTO = new ErrorDTO(
-                Instant.now(),
-                HttpStatus.CONFLICT.value(),
-                ex.getMessage(),
-                HttpStatus.CONFLICT.getReasonPhrase(),
-                request.getDescription(false));
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorDTO);
-    }
-
-
-    @ExceptionHandler(MissingParameterException.class)
-    public ResponseEntity<ErrorDTO> handleMissingParameterException(MissingParameterException ex, WebRequest request) {
+    @ExceptionHandler(UserException.class)
+    public ResponseEntity<ErrorDTO> handleUserException(UserException ex, WebRequest request) {
         ErrorDTO errorDTO = new ErrorDTO(
                 Instant.now(),
                 HttpStatus.BAD_REQUEST.value(),
@@ -45,26 +22,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDTO);
     }
 
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorDTO> handleResourceNotFoundException(ResourceNotFoundException ex, WebRequest request) {
-        ErrorDTO errorDTO = new ErrorDTO(
-                Instant.now(),
-                HttpStatus.NOT_FOUND.value(),
-                ex.getMessage(),
-                HttpStatus.NOT_FOUND.getReasonPhrase(),
-                request.getDescription(false));
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDTO);
-    }
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorDTO> handleRoomNotFoundException(ResourceNotFoundException ex, WebRequest request) {
-        ErrorDTO errorDTO = new ErrorDTO(
-                Instant.now(),
-                HttpStatus.NOT_FOUND.value(),
-                ex.getMessage(),
-                HttpStatus.NOT_FOUND.getReasonPhrase(),
-                request.getDescription(false));
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDTO);
-    }
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<ErrorDTO> handleUnauthorizedException(UnauthorizedException ex, WebRequest request) {
         ErrorDTO errorDTO = new ErrorDTO(
@@ -75,18 +32,28 @@ public class GlobalExceptionHandler {
                 request.getDescription(false));
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorDTO);
     }
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorDTO> handleGlobalException(Exception ex, WebRequest request) {
+
+
+    @ExceptionHandler(RoomException.class)
+    public ResponseEntity<ErrorDTO> handleRoomException(RoomException ex, WebRequest request) {
         ErrorDTO errorDTO = new ErrorDTO(
                 Instant.now(),
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
-                "An unexpected error occurred",
-                request.getDescription(false).replace("uri=", "")
-        );
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(errorDTO);
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                request.getDescription(false));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDTO);
+    }
+
+    @ExceptionHandler(ReservationException.class)
+    public ResponseEntity<ErrorDTO> handleReservationException(ReservationException ex, WebRequest request) {
+        ErrorDTO errorDTO = new ErrorDTO(
+                Instant.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                request.getDescription(false));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDTO);
     }
 
 }

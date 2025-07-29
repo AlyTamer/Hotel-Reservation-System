@@ -2,6 +2,7 @@ package com.aly.brightskies.task3.security;
 
 import com.aly.brightskies.task3.entities.User;
 import com.aly.brightskies.task3.exceptions.UnauthorizedException;
+import com.aly.brightskies.task3.exceptions.UnauthorizedMessages;
 import com.aly.brightskies.task3.repositories.UserRepo;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -63,7 +64,7 @@ public class JWTUtility {
                 .after(new Date()))
             return true;
         else {
-            throw new UnauthorizedException("Invalid token, Expired and/or invalid credentials");
+            throw new UnauthorizedException(UnauthorizedMessages.INVALID_TOKEN);
         }
     }
 

@@ -1,6 +1,8 @@
     package com.aly.brightskies.task3.security;
 
     import com.aly.brightskies.task3.exceptions.UnauthorizedException;
+    import com.aly.brightskies.task3.exceptions.UnauthorizedMessages;
+    import com.aly.brightskies.task3.exceptions.UserException;
     import org.springframework.beans.factory.annotation.Autowired;
     import org.springframework.context.annotation.Bean;
     import org.springframework.context.annotation.Configuration;
@@ -39,12 +41,12 @@
                 try {
                     userDetails = userDetailsService.loadUserByUsername(authentication.getPrincipal().toString());
                 } catch (Exception e) {
-                    throw new UnauthorizedException("Unauthorized: " + e.getMessage());
+                    throw new UnauthorizedException(UnauthorizedMessages.INVALID_CREDENTIALS);
                 }
                 if (userDetails == null) throw new UsernameNotFoundException("User not found");
                 if (!passwordEncoder.matches(authentication.getCredentials().toString(),
                         userDetails.getPassword())) {
-                    throw new UnauthorizedException("Invalid password");
+                    throw new UnauthorizedException(UnauthorizedMessages.INVALID_CREDENTIALS);
                 }
                 return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             };
