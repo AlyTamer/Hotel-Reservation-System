@@ -7,6 +7,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,7 @@ public class JWTUtility {
     private String secret;
     @Value("${jwt.expiration}")
     private Long expirationTime;
+    @Getter
     private Key key;
     @Autowired
     private UserRepo userRepo;
@@ -27,10 +29,6 @@ public class JWTUtility {
     @PostConstruct
     public void init() {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
-    }
-
-    public Key getKey() {
-        return key;
     }
 
     public String generateToken(String username) {
