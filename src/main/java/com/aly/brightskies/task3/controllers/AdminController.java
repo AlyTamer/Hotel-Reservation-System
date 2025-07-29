@@ -4,6 +4,7 @@ import com.aly.brightskies.task3.dto.ReservationDTO;
 import com.aly.brightskies.task3.dto.RoomDTO;
 import com.aly.brightskies.task3.dto.UserDTO;
 import com.aly.brightskies.task3.entities.Role;
+import com.aly.brightskies.task3.exceptions.ConflictException;
 import com.aly.brightskies.task3.services.ReservationService;
 import com.aly.brightskies.task3.services.RoomService;
 import com.aly.brightskies.task3.services.UserService;
@@ -145,8 +146,7 @@ public class AdminController {
             userService.updateUserRole(id, newRole);
             System.out.println("Changed role to " + newRole);
         } catch (Exception e) {
-            System.out.println("Couldnt change role");
-            throw new RuntimeException(e);
+            throw new ConflictException("Couldnt change role");
         }
 
     }
@@ -159,6 +159,7 @@ public class AdminController {
     
     @DeleteMapping("/users/{id}")
     public void deleteUser(@PathVariable int id) {
+
         userService.deleteById(id);
     }
 

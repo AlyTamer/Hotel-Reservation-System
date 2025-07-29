@@ -13,6 +13,7 @@ public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(unique = true)
     private int roomNumber;
     private String roomType;
     @Enumerated(EnumType.STRING)

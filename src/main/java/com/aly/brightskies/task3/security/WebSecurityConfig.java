@@ -1,5 +1,6 @@
     package com.aly.brightskies.task3.security;
 
+    import com.aly.brightskies.task3.exceptions.UnauthorizedException;
     import org.springframework.beans.factory.annotation.Autowired;
     import org.springframework.context.annotation.Bean;
     import org.springframework.context.annotation.Configuration;
@@ -35,11 +36,16 @@
         @Bean
         public AuthenticationManager authManager(PasswordEncoder passwordEncoder) throws RuntimeException {
             return authentication -> {
-                UserDetails userDetails = userDetailsService.loadUserByUsername(authentication.getPrincipal().toString());
+                UserDetails userDetails = null;
+                try {
+                    userDetails = userDetailsService.loadUserByUsername(authentication.getPrincipal().toString());
+                } catch (Exception e) {
+                    throw new UnauthorizedException("Unauthorized: " + e.getMessage());
+                }
                 if (userDetails == null) throw new UsernameNotFoundException("User not found");
                 if (!passwordEncoder.matches(authentication.getCredentials().toString(),
                         userDetails.getPassword())) {
-                    throw new BadCredentialsException("Invalid password");
+                    throw new UnauthorizedException("Invalid password");
                 }
                 return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             };

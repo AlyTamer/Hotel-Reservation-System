@@ -3,6 +3,8 @@ package com.aly.brightskies.task3.controllers;
 import com.aly.brightskies.task3.dto.UserDTO;
 import com.aly.brightskies.task3.entities.Role;
 import com.aly.brightskies.task3.entities.User;
+import com.aly.brightskies.task3.exceptions.ConflictException;
+import com.aly.brightskies.task3.exceptions.UnauthorizedException;
 import com.aly.brightskies.task3.repositories.UserRepo;
 import com.aly.brightskies.task3.security.JWTUtility;
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,14 +46,14 @@ public class LoginController {
     )
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody UserDTO user) {
-        if (userRepo.existsByEmail(user.getEmail())) {
-            return ResponseEntity
-                    .status(HttpStatus.CONFLICT)
-                    .body("Email already in use");
-        }
+        if (userRepo.existsByUserName((user.getUsername())))
+            throw new ConflictException("Username is already in use");
+        if (userRepo.existsByEmail((user.getEmail())))
+            throw new ConflictException("Email is already in use");
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        if (user.getRole() == null|| user.getRole()==Role.ROLE_ADMIN) {
+        if (user.getRole() != Role.ROLE_USER) {
             user.setRole(Role.ROLE_USER);
         }
         User saved = userRepo.save(
@@ -64,7 +66,7 @@ public class LoginController {
                 )
         );
         String token = jwtUtil.generateToken(saved.getUserName());
-        System.out.println("Generated token for"+user.getUsername()+" with Role "+user.getRole()+":\n" + token);
+        System.out.println("Generated token for" + user.getUsername() + " with Role " + user.getRole() + ":\n" + token);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
@@ -90,8 +92,8 @@ public class LoginController {
                     .ok()
                     .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                     .body(loggedIn);
-        } catch (AuthenticationException ex) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (Exception ex) {
+            throw new UnauthorizedException("Invalid username or password");
         }
     }
 }

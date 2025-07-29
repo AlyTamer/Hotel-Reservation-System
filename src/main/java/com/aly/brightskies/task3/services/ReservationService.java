@@ -3,6 +3,7 @@ package com.aly.brightskies.task3.services;
 import com.aly.brightskies.task3.dto.ReservationDTO;
 import com.aly.brightskies.task3.entities.Reservation;
 import com.aly.brightskies.task3.entities.User;
+import com.aly.brightskies.task3.exceptions.ResourceNotFoundException;
 import com.aly.brightskies.task3.repositories.ReservationRepo;
 import com.aly.brightskies.task3.repositories.RoomRepo;
 import com.aly.brightskies.task3.repositories.UserRepo;
@@ -27,7 +28,7 @@ public class ReservationService {
 
 
     public List<ReservationDTO> getUserReservation(int userId) {
-        User user = userRepo.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
         List<Reservation> reservations = reservationRepo.getAllByUserId(user);
         List<ReservationDTO> dtos = new ArrayList<>();
         for (Reservation reservation : reservations) {
@@ -37,7 +38,7 @@ public class ReservationService {
     }
 
     public ReservationDTO updateReservation(int id, ReservationDTO res) {
-        Reservation currentRes = reservationRepo.findById(id).orElseThrow(() -> new RuntimeException("Reservation not found"));
+        Reservation currentRes = reservationRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Reservation not found"));
         currentRes.setCheckInDate(res.getCheckInDate());
         currentRes.setCheckOutDate(res.getCheckOutDate());
         currentRes.setStatus(res.getStatus());
@@ -71,7 +72,7 @@ public class ReservationService {
     }
     public ReservationDTO createReservation(ReservationDTO dto) {
         Reservation reservation = new Reservation();
-        reservation.setUserId(userRepo.findById(dto.getUserId()).orElseThrow(() -> new RuntimeException("User not found")));
+        reservation.setUserId(userRepo.findById(dto.getUserId()).orElseThrow(() -> new ResourceNotFoundException("User not found")));
         reservation.setRoomId(roomRepo.findById(dto.getRoomId()));
         reservation.setCheckInDate(dto.getCheckInDate());
         reservation.setCheckOutDate(dto.getCheckOutDate());
