@@ -15,10 +15,15 @@ import io.swagger.v3.oas.annotations.servers.Server;
                 description = "API documentation for Bright Skies Task 3 to test out the Hotel Management System"
         ),
 
-        servers = @Server(
+        servers = {
+                @Server(
                 url = "http://localhost:8080",
                 description = "Local server"
         ),
+        @Server(
+                url="https://localhost:8888",
+                description = "Local server for dockerized app"
+        )},
         security = @SecurityRequirement(
                 name = "bearerAuth"
         )

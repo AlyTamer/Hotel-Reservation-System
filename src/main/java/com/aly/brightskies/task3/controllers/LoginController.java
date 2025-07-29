@@ -51,7 +51,7 @@ public class LoginController {
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        if (user.getRole() == null) {
+        if (user.getRole() == null|| user.getRole()==Role.ROLE_ADMIN) {
             user.setRole(Role.ROLE_USER);
         }
         User saved = userRepo.save(
