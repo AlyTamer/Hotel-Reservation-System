@@ -2,7 +2,6 @@
 
     import com.aly.brightskies.task3.exceptions.UnauthorizedException;
     import com.aly.brightskies.task3.exceptions.UnauthorizedMessages;
-    import com.aly.brightskies.task3.exceptions.UserException;
     import org.springframework.beans.factory.annotation.Autowired;
     import org.springframework.context.annotation.Bean;
     import org.springframework.context.annotation.Configuration;

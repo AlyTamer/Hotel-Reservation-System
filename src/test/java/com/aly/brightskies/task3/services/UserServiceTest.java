@@ -85,7 +85,7 @@ public class UserServiceTest {
     @Test
     void testFindAllUsers_EmptyList() {
         try {
-            userRepo.deleteAll(); // Clear the repository
+            userRepo.deleteAll();
             List<UserDTO> users = userService.findAll();
             assertTrue(users==null, "Expected an empty list of users");
         } catch (Exception e) {
@@ -95,7 +95,7 @@ public class UserServiceTest {
     @Test
     void testDeleteUserById_UserNotFound() {
         try {
-            userService.deleteById(9999); // Assuming 9999 is an invalid ID
+            userService.deleteById(9999);
             fail("Expected an exception to be thrown");
         } catch (Exception e) {
             return;

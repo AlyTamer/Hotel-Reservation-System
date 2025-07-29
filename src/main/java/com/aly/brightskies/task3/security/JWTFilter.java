@@ -2,14 +2,14 @@ package com.aly.brightskies.task3.security;
 
 import com.aly.brightskies.task3.exceptions.UnauthorizedException;
 import com.aly.brightskies.task3.exceptions.UnauthorizedMessages;
-import io.jsonwebtoken.Claims;                                    // ← new
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;  // ← new
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -17,8 +17,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.List;                                          // ← new
-
+import java.util.List;
+@SuppressWarnings("all")
 @Component
 public class JWTFilter extends OncePerRequestFilter {
     @Autowired
@@ -34,7 +34,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
         String authHeader = request.getHeader("Authorization");
         String token;
-        String username = null;
+        String username ;
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
             if (JWTUtility.validateToken(token)) {

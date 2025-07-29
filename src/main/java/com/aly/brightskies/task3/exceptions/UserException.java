@@ -5,7 +5,5 @@ public class UserException extends RuntimeException{
         super(message);
     }
 
-    public UserException(String message, Throwable cause) {
-        super(message, cause);
-    }
+
 }

@@ -98,7 +98,6 @@ List<RoomDTO> results =roomService.getRooms(null);
         assertEquals("Suite", updatedRoom.getRoomType());
         assertEquals(Status.BOOKED, updatedRoom.getStatus());
 
-        // Verify the room was updated in the repository
         Room savedRoom = roomRepo.findById(testRoom.getId());
         assertNotNull(savedRoom);
         assertEquals("Suite", savedRoom.getRoomType());
